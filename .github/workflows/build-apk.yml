@@ -20,10 +20,11 @@ jobs:
           gradle-version: 8.9
 
       - name: Build debug APK
+        working-directory: RestoApp
         run: gradle assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: RestoPOS-apk
-          path: RestoPOS/app/build/outputs/apk/debug/app-debug.apk
+          path: RestoApp/app/build/outputs/apk/debug/app-debug.apk
