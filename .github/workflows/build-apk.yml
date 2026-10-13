@@ -20,11 +20,20 @@ jobs:
           gradle-version: 8.9
 
       - name: Build debug APK
-        working-directory: RestoApp
-        run: gradle assembleDebug --no-daemon
+        run: |
+          FILE=$(find . -name settings.gradle.kts -not -path './.git/*' | head -n 1)
+          if [ -z "$FILE" ]; then
+            echo "settings.gradle.kts was not uploaded. Files in repo:"
+            find . -not -path './.git/*' -type f | head -50
+            exit 1
+          fi
+          DIR=$(dirname "$FILE")
+          echo "Building in $DIR"
+          cd "$DIR"
+          gradle assembleDebug --no-daemon
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: RestoPOS-apk
-          path: RestoPOS/app/build/outputs/apk/debug/app-debug.apk
+          path: "**/app/build/outputs/apk/debug/app-debug.apk"
